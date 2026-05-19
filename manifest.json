@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "Weather Station",
+      "id": "weather",
+      "version": "1.0"
+    },
+    {
+      "name": "MQTT Client",
+      "id": "mqtt",
+      "version": "1.2"
+    }
+  ]
+}
