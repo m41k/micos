@@ -1,13 +1,13 @@
 {
   "apps": [
     {
-      "name": "Sonic",
-      "id": "Sonic",
+      "name": "micos00",
+      "id": "micos00",
       "version": "1.0"
     },
     {
-      "name": "Yoga",
-      "id": "Yoga",
+      "name": "micos01",
+      "id": "micos01",
       "version": "1.0"
     }
   ]
