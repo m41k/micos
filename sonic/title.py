@@ -187,7 +187,7 @@ def load_image(path):
 # IMAGEM SONIC
 # =========================
 
-sonic_fb = load_image("/img/sonic.bin")
+sonic_fb = load_image("sonic.bin")
 
 # =========================
 # TELA INICIAL
