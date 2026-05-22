@@ -74,7 +74,7 @@ oled.fill(0)
 #oled.text("READY", 45, 30)
 oled.show()
 
-from . import title
+#from . import title
 
-#while True:
-#    time.sleep(1)
+while True:
+    time.sleep(1)
