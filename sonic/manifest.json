@@ -10,6 +10,7 @@
     "sprites.py",
     "title.py",
     "sega.bin",
+    "sonic.bin",
     "som.wav",        
   ]
 }
