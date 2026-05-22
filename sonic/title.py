@@ -189,10 +189,6 @@ def load_image(path):
 # IMAGEM SONIC
 # =========================
 
-sega_fb = load_image(
-    APP_PATH + "sega.bin"
-)
-
 sonic_fb = load_image(
     APP_PATH + "sonic.bin"
 )
