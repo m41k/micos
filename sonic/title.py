@@ -2,6 +2,7 @@ from machine import Pin, I2C, PWM
 import ssd1306
 import framebuf
 import time
+import machine
 
 APP_PATH = "/apps/current/"
 
@@ -16,14 +17,22 @@ i2c = I2C(
     freq=400000
 )
 
-oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+oled = ssd1306.SSD1306_I2C(
+    128,
+    64,
+    i2c
+)
 
 # =========================
 # BOTÃO A
 # GP5
 # =========================
 
-btn_a = Pin(5, Pin.IN, Pin.PULL_UP)
+btn_a = Pin(
+    5,
+    Pin.IN,
+    Pin.PULL_UP
+)
 
 # =========================
 # BUZZER
@@ -31,6 +40,7 @@ btn_a = Pin(5, Pin.IN, Pin.PULL_UP)
 # =========================
 
 buzzer = PWM(Pin(21))
+
 buzzer.duty_u16(0)
 
 # =========================
@@ -59,7 +69,12 @@ NOTE = {
 }
 
 tempo = 140
+
 whole = int((60000 * 4) / tempo)
+
+# =========================
+# MELODIA
+# =========================
 
 melody = [
 
@@ -84,21 +99,29 @@ melody = [
 ]
 
 # =========================
-# VERIFICA BOTÃO
+# CONTROLE
+# =========================
+
+next_screen = False
+
+# =========================
+# BOTÃO
 # =========================
 
 def check_button():
+
+    global next_screen
 
     if btn_a.value() == 0:
 
         buzzer.duty_u16(0)
 
+        next_screen = True
+
         time.sleep_ms(150)
 
-        from . import frame
-
 # =========================
-# TOCA SOM
+# PLAY NOTE
 # =========================
 
 def play(freq, dur):
@@ -109,9 +132,15 @@ def play(freq, dur):
 
         start = time.ticks_ms()
 
-        while time.ticks_diff(time.ticks_ms(), start) < dur:
+        while time.ticks_diff(
+            time.ticks_ms(),
+            start
+        ) < dur:
 
             check_button()
+
+            if next_screen:
+                return
 
             time.sleep_ms(1)
 
@@ -125,9 +154,18 @@ def play(freq, dur):
 
     start = time.ticks_ms()
 
-    while time.ticks_diff(time.ticks_ms(), start) < active:
+    while time.ticks_diff(
+        time.ticks_ms(),
+        start
+    ) < active:
 
         check_button()
+
+        if next_screen:
+
+            buzzer.duty_u16(0)
+
+            return
 
         time.sleep_ms(1)
 
@@ -137,9 +175,15 @@ def play(freq, dur):
 
     start = time.ticks_ms()
 
-    while time.ticks_diff(time.ticks_ms(), start) < pause:
+    while time.ticks_diff(
+        time.ticks_ms(),
+        start
+    ) < pause:
 
         check_button()
+
+        if next_screen:
+            return
 
         time.sleep_ms(1)
 
@@ -152,14 +196,22 @@ def duration(div):
     return int(whole / div)
 
 # =========================
-# TOCA MÚSICA
+# SONG
 # =========================
 
 def song():
 
+    global next_screen
+
     for note, div in melody:
 
         check_button()
+
+        if next_screen:
+
+            buzzer.duty_u16(0)
+
+            return
 
         play(
             NOTE[note],
@@ -169,7 +221,7 @@ def song():
     buzzer.duty_u16(0)
 
 # =========================
-# CARREGA IMAGEM
+# LOAD IMAGE
 # =========================
 
 def load_image(path):
@@ -186,44 +238,67 @@ def load_image(path):
     )
 
 # =========================
-# IMAGEM SONIC
+# LOAD ASSET
 # =========================
 
 sonic_fb = load_image(
     APP_PATH + "sonic.bin"
 )
 
-
 # =========================
-# TELA INICIAL
+# SPLASH
 # =========================
 
 oled.fill(0)
 
-oled.blit(sonic_fb, 0, 0)
+oled.blit(
+    sonic_fb,
+    0,
+    0
+)
 
 oled.show()
 
 time.sleep(0.7)
 
 # =========================
-# TOCA MÚSICA
+# MUSIC
 # =========================
 
 song()
 
 # =========================
-# LOOP FINAL
+# FINAL SCREEN
+# =========================
+
+oled.fill(0)
+
+oled.text(
+    "PRESS A",
+    30,
+    28
+)
+
+oled.show()
+
+# =========================
+# LOOP
 # =========================
 
 while True:
 
     check_button()
 
-    oled.fill(0)
+    if next_screen:
 
-    oled.text("PRESS A", 30, 28)
+        oled.fill(0)
 
-    oled.show()
+        oled.show()
+
+        time.sleep_ms(200)
+
+        from . import frame
+
+        break
 
     time.sleep_ms(10)
