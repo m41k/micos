@@ -3,6 +3,8 @@ import ssd1306
 import framebuf
 import time
 
+APP_PATH = "/apps/current/"
+
 # =========================
 # OLED
 # =========================
@@ -53,7 +55,9 @@ def load_image(path):
 # =========================
 # SEGA LOGO
 # =========================
-sega_fb = load_image("sega.bin")
+sega_fb = load_image(
+    APP_PATH + "sega.bin"
+)
 
 # =========================
 # BOOT
@@ -67,7 +71,9 @@ oled.show()
 time.sleep(0.3)
 
 # toca som (mesma lógica do seu botão)
-play_wav("som.wav")
+play_wav(
+    APP_PATH + "som.wav"
+)
 
 # tela final
 oled.fill(0)
