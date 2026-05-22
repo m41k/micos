@@ -53,7 +53,7 @@ def load_image(path):
 # =========================
 # SEGA LOGO
 # =========================
-sega_fb = load_image("./sega.bin")
+sega_fb = load_image("sega.bin")
 
 # =========================
 # BOOT
@@ -67,14 +67,14 @@ oled.show()
 time.sleep(0.3)
 
 # toca som (mesma lógica do seu botão)
-play_wav("./som.wav")
+play_wav("som.wav")
 
 # tela final
 oled.fill(0)
 #oled.text("READY", 45, 30)
 oled.show()
 
-#from . import title
+from . import title
 
-while True:
-    time.sleep(1)
+#while True:
+#    time.sleep(1)
