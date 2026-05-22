@@ -95,7 +95,7 @@ def check_button():
 
         time.sleep_ms(150)
 
-        import frame
+        from . import frame
 
 # =========================
 # TOCA SOM
