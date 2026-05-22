@@ -1,0 +1,15 @@
+{
+  "name": "yoga",
+  "entry": "main.py",
+  "files": [
+    "__init__.py",
+    "main.py",
+    "animacoes.py",
+    "frame.py",
+    "input.py",
+    "sprites.py",
+    "title.py",
+    "sega.bin",
+    "som.wav",        
+  ]
+}
