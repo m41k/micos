@@ -1,4 +1,4 @@
-from sprites import *
+from .sprites import *
 
 
 # =========================================================
