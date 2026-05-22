@@ -3,8 +3,8 @@ from ssd1306 import SSD1306_I2C
 import framebuf
 import time
 
-from animacoes import animacoes
-from input import *
+from .animacoes import animacoes
+from .input import *
 
 # =========================================================
 # OLED
