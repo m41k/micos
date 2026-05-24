@@ -9,7 +9,12 @@
       "name": "micos01",
       "id": "micos01",
       "version": "1.0"
-    }
+    },
+    {
+      "name": "boto",
+      "id": "boto01",
+      "version": "1.0"
+    },
     {
       "name": "yoga",
       "id": "yoga",
