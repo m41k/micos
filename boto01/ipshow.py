@@ -1,6 +1,7 @@
 from machine import Pin, I2C, UART
 import ssd1306
 import time
+from .input import *
 
 # =========================
 # OLED
