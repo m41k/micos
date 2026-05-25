@@ -2,8 +2,6 @@ from machine import Pin, I2C, UART
 import ssd1306
 import time
 
-from .input import botao_a_pressionado
-
 # OLED
 i2c = I2C(
     1,
@@ -36,42 +34,34 @@ def draw(lines):
 
     oled.show()
 
-def ipshow():
+draw([
+    "MXQ Companion",
+    "",
+    "Waiting..."
+])
 
-    draw([
-        "ETH0 IP",
-        "",
-        "Waiting..."
-    ])
+buffer = ""
 
-    buffer = ""
+while True:
 
-    while True:
+    if uart.any():
 
-        # VOLTAR
-        if botao_a_pressionado():
+        data = uart.read()
 
-            return
+        if data:
 
-        # UART
-        if uart.any():
+            buffer += data.decode()
 
-            data = uart.read()
+            if "\n" in buffer:
 
-            if data:
+                line = buffer.strip()
 
-                buffer += data.decode()
+                buffer = ""
 
-                if "\n" in buffer:
+                draw([
+                    "ETH0 IP:",
+                    "",
+                    line
+                ])
 
-                    line = buffer.strip()
-
-                    buffer = ""
-
-                    draw([
-                        "ETH0 IP:",
-                        "",
-                        line
-                    ])
-
-        time.sleep_ms(50)
+    time.sleep_ms(50)
