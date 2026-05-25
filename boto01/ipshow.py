@@ -3,13 +3,6 @@ import ssd1306
 import time
 
 # =========================
-# BOTÕES
-# =========================
-
-btn_a = Pin(5, Pin.IN, Pin.PULL_UP)
-btn_b = Pin(6, Pin.IN, Pin.PULL_UP)
-
-# =========================
 # OLED
 # =========================
 
