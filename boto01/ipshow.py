@@ -75,7 +75,7 @@ while True:
 
     if btn_a.value() == 0:
 
-       from . import outro
+       from . import main
 
     # =====================
     # UART
