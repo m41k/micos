@@ -2,6 +2,7 @@ from machine import Pin, I2C
 from ssd1306 import SSD1306_I2C
 import framebuf
 import time
+from .input import *
 
 # =========================
 # I2C OLED
@@ -12,17 +13,6 @@ oled = SSD1306_I2C(128, 64, i2c)
 #i2c = I2C(0, scl=Pin(15), sda=Pin(14), freq=400000)
 
 #oled = ssd1306.SSD1306_I2C(128, 64, i2c)
-
-# =========================
-# BOTÃO A
-# GP5
-# =========================
-
-btn_a = Pin(
-    5,
-    Pin.IN,
-    Pin.PULL_UP
-)
 
 # =========================
 # Bitmap 50x50
