@@ -2,7 +2,17 @@ from machine import Pin, I2C, UART
 import ssd1306
 import time
 
+# =========================
+# BOTÕES
+# =========================
+
+btn_a = Pin(5, Pin.IN, Pin.PULL_UP)
+btn_b = Pin(6, Pin.IN, Pin.PULL_UP)
+
+# =========================
 # OLED
+# =========================
+
 i2c = I2C(
     1,
     scl=Pin(15),
@@ -16,13 +26,20 @@ oled = ssd1306.SSD1306_I2C(
     i2c
 )
 
+# =========================
 # UART
+# =========================
+
 uart = UART(
     0,
     baudrate=115200,
-    tx=Pin(16),
-    rx=Pin(17)
+    tx=Pin(0),
+    rx=Pin(1)
 )
+
+# =========================
+# DRAW
+# =========================
 
 def draw(lines):
 
@@ -34,6 +51,10 @@ def draw(lines):
 
     oled.show()
 
+# =========================
+# TELA INICIAL
+# =========================
+
 draw([
     "MXQ Companion",
     "",
@@ -42,7 +63,23 @@ draw([
 
 buffer = ""
 
+# =========================
+# LOOP
+# =========================
+
 while True:
+
+    # =====================
+    # BOTAO A
+    # =====================
+
+    if btn_a.value() == 0:
+
+       from . import outro
+
+    # =====================
+    # UART
+    # =====================
 
     if uart.any():
 
