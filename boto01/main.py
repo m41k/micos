@@ -14,6 +14,17 @@ oled = SSD1306_I2C(128, 64, i2c)
 #oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
 # =========================
+# BOTÃO A
+# GP5
+# =========================
+
+btn_a = Pin(
+    5,
+    Pin.IN,
+    Pin.PULL_UP
+)
+
+# =========================
 # Bitmap 50x50
 # =========================
 
@@ -69,3 +80,13 @@ y = (64 - logo_height) // 2
 oled.blit(fb, x, y)
 
 oled.show()
+
+
+while True:
+
+    if btn_a.value() == 0:
+
+        from . import ipshow
+
+    time.sleep_ms(10)
+
