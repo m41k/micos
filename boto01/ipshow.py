@@ -1,12 +1,10 @@
 from machine import Pin, I2C, UART
 import ssd1306
 import time
-from .input import *
 
-# =========================
+from .input import botao_a_pressionado
+
 # OLED
-# =========================
-
 i2c = I2C(
     1,
     scl=Pin(15),
@@ -20,20 +18,13 @@ oled = ssd1306.SSD1306_I2C(
     i2c
 )
 
-# =========================
 # UART
-# =========================
-
 uart = UART(
     0,
     baudrate=115200,
     tx=Pin(0),
     rx=Pin(1)
 )
-
-# =========================
-# DRAW
-# =========================
 
 def draw(lines):
 
@@ -45,54 +36,42 @@ def draw(lines):
 
     oled.show()
 
-# =========================
-# TELA INICIAL
-# =========================
+def ipshow():
 
-draw([
-    "MXQ Companion",
-    "",
-    "Waiting..."
-])
+    draw([
+        "ETH0 IP",
+        "",
+        "Waiting..."
+    ])
 
-buffer = ""
+    buffer = ""
 
-# =========================
-# LOOP
-# =========================
+    while True:
 
-while True:
+        # VOLTAR
+        if botao_a_pressionado():
 
-    # =====================
-    # BOTAO A
-    # =====================
+            return
 
-    if botao_a_pressionado():
+        # UART
+        if uart.any():
 
-       from . import main
+            data = uart.read()
 
-    # =====================
-    # UART
-    # =====================
+            if data:
 
-    if uart.any():
+                buffer += data.decode()
 
-        data = uart.read()
+                if "\n" in buffer:
 
-        if data:
+                    line = buffer.strip()
 
-            buffer += data.decode()
+                    buffer = ""
 
-            if "\n" in buffer:
+                    draw([
+                        "ETH0 IP:",
+                        "",
+                        line
+                    ])
 
-                line = buffer.strip()
-
-                buffer = ""
-
-                draw([
-                    "ETH0 IP:",
-                    "",
-                    line
-                ])
-
-    time.sleep_ms(50)
+        time.sleep_ms(50)
