@@ -73,7 +73,7 @@ while True:
     # BOTAO A
     # =====================
 
-    if btn_a.value() == 0:
+    if botao_b_pressionado():
 
        from . import main
 
