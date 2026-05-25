@@ -67,7 +67,7 @@ while True:
     # BOTAO A
     # =====================
 
-    if botao_b_pressionado():
+    if botao_a_pressionado():
 
        from . import main
 
