@@ -1,13 +1,16 @@
 from machine import Pin, I2C
 from ssd1306 import SSD1306_I2C
-
 import time
 
-from .input import up, down, select
+from .input import (
+    cima,
+    baixo,
+    botao_a_pressionado
+)
 
-# ==========================================
+# =========================================================
 # OLED
-# ==========================================
+# =========================================================
 
 i2c = I2C(
     1,
@@ -22,34 +25,69 @@ oled = SSD1306_I2C(
     i2c
 )
 
-# ==========================================
+# =========================================================
 # MENU
-# ==========================================
+# =========================================================
 
-items = [
-    "IP",
-    "SETTINGS",
-    "ABOUT"
+menu_items = [
+
+    {
+        "nome": "JOGO 1",
+        "modulo": "jogo1"
+    },
+
+    {
+        "nome": "JOGO 2",
+        "modulo": "jogo2"
+    },
+
+    {
+        "nome": "CONFIG",
+        "modulo": "config"
+    },
+
+    {
+        "nome": "ABOUT",
+        "modulo": "about"
+    }
+
 ]
 
-selected = 0
+# =========================================================
+# ESTADO
+# =========================================================
 
-# ==========================================
+selecionado = 0
+
+ultimo_input = 0
+
+INPUT_DELAY = 180
+
+# =========================================================
 # DRAW
-# ==========================================
+# =========================================================
 
-def draw():
+def desenha_menu():
 
     oled.fill(0)
 
-    y = 0
+    oled.text(
+        "MENU",
+        45,
+        0
+    )
 
-    for i, item in enumerate(items):
+    y = 16
 
-        prefix = "> " if i == selected else "  "
+    for i, item in enumerate(menu_items):
+
+        prefixo = " "
+
+        if i == selecionado:
+            prefixo = ">"
 
         oled.text(
-            prefix + item,
+            prefixo + item["nome"],
             0,
             y
         )
@@ -58,104 +96,99 @@ def draw():
 
     oled.show()
 
-# ==========================================
-# LOOP
-# ==========================================
+# =========================================================
+# INPUT
+# =========================================================
 
-draw()
+def pode_input():
+
+    global ultimo_input
+
+    agora = time.ticks_ms()
+
+    if time.ticks_diff(
+        agora,
+        ultimo_input
+    ) > INPUT_DELAY:
+
+        ultimo_input = agora
+
+        return True
+
+    return False
+
+# =========================================================
+# LOOP
+# =========================================================
+
+desenha_menu()
 
 while True:
 
-    # ======================
-    # UP
-    # ======================
+    # =====================================
+    # CIMA
+    # =====================================
 
-    if up():
+    if cima() and pode_input():
 
-        selected -= 1
+        selecionado -= 1
 
-        if selected < 0:
-            selected = len(items) - 1
+        if selecionado < 0:
+            selecionado = len(menu_items) - 1
 
-        draw()
+        desenha_menu()
 
-        time.sleep_ms(200)
+    # =====================================
+    # BAIXO
+    # =====================================
 
-    # ======================
-    # DOWN
-    # ======================
+    elif baixo() and pode_input():
 
-    if down():
+        selecionado += 1
 
-        selected += 1
+        if selecionado >= len(menu_items):
+            selecionado = 0
 
-        if selected >= len(items):
-            selected = 0
+        desenha_menu()
 
-        draw()
-
-        time.sleep_ms(200)
-
-    # ======================
+    # =====================================
     # SELECT
-    # ======================
+    # =====================================
 
-    if select():
+    elif botao_a_pressionado() and pode_input():
 
         oled.fill(0)
 
         oled.text(
-            "Loading...",
+            "Abrindo...",
             20,
             28
         )
 
         oled.show()
 
-        time.sleep_ms(300)
+        modulo = menu_items[selecionado]["modulo"]
 
-        # ==================
-        # GAME
-        # ==================
+        # =================================
+        # EXEMPLOS
+        # =================================
 
-        if selected == 0:
+        if modulo == "jogo1":
 
-            from . import ipshow
+            from . import jogo1
 
-        # ==================
-        # SETTINGS
-        # ==================
+        elif modulo == "jogo2":
 
-        elif selected == 1:
+            from . import jogo2
 
-            from . import settings
+        elif modulo == "config":
 
-        # ==================
-        # ABOUT
-        # ==================
+            from . import config
 
-        elif selected == 2:
+        elif modulo == "about":
 
-            oled.fill(0)
+            from . import about
 
-            oled.text(
-                "M41K OTA",
-                20,
-                20
-            )
+        break
 
-            oled.text(
-                "Pico W",
-                30,
-                35
-            )
-
-            oled.show()
-
-            time.sleep(2)
-
-            draw()
-
-        time.sleep_ms(300)
-
-    time.sleep_ms(20)
+    time.sleep_ms(10)
