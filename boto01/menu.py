@@ -5,7 +5,7 @@ import gc
 
 from system.router import open_app
 
-from .input import (
+from apps.current.input import (
     cima,
     baixo,
     botao_a_pressionado
