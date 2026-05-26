@@ -3,7 +3,6 @@ from ssd1306 import SSD1306_I2C
 import framebuf
 import time
 from .input import *
-from .ipshow import ipshow
 
 # =========================
 # I2C OLED
@@ -77,7 +76,7 @@ while True:
 
     if botao_a_pressionado():
 
-        ipshow()
+        from . import menu
 
     time.sleep_ms(10)
 
