@@ -3,7 +3,6 @@ import ssd1306
 import time
 
 from .input import (
-    botao_a_pressionado,
     botao_b_pressionado
 )
 
@@ -83,6 +82,24 @@ def draw(lines):
     oled.show()
 
 # =========================================================
+# RETURN MENU
+# =========================================================
+
+def voltar_menu():
+
+    oled.fill(0)
+
+    oled.show()
+
+    time.sleep_ms(200)
+
+    exec(
+        open(
+            "/apps/current/menu.py"
+        ).read()
+    )
+
+# =========================================================
 # SCREEN
 # =========================================================
 
@@ -99,7 +116,7 @@ def ipshow():
     while True:
 
         # =====================================
-        # VOLTAR MENU
+        # MENU
         # =====================================
 
         if (
@@ -107,16 +124,10 @@ def ipshow():
             and pode_input()
         ):
 
-            oled.fill(0)
-
-            oled.show()
-
-            time.sleep_ms(200)
-
-            import apps.current.menu
+            voltar_menu()
 
             return
-            
+
         # =====================================
         # UART
         # =====================================
