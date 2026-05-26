@@ -1,7 +1,6 @@
 from machine import Pin
+from ssd1306 import SSD1306_I2C
 import time
-
-from .display import draw
 from .input import (
     botao_a_pressionado,
     botao_b_pressionado,
