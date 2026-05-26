@@ -175,7 +175,7 @@ while True:
 
         if modulo == "showip":
 
-            from . import showip
+            from . import ipshow
 
         elif modulo == "jogo2":
 
