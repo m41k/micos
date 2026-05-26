@@ -22,8 +22,8 @@ oled = ssd1306.SSD1306_I2C(
 uart = UART(
     0,
     baudrate=115200,
-    tx=Pin(0),
-    rx=Pin(1)
+    tx=Pin(16),
+    rx=Pin(17)
 )
 
 def draw(lines):
