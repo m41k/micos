@@ -32,8 +32,8 @@ oled = SSD1306_I2C(
 menu_items = [
 
     {
-        "nome": "JOGO 1",
-        "modulo": "jogo1"
+        "nome": "SHOW IP Linux",
+        "modulo": "showip"
     },
 
     {
@@ -173,9 +173,9 @@ while True:
         # EXEMPLOS
         # =================================
 
-        if modulo == "jogo1":
+        if modulo == "showip":
 
-            from . import jogo1
+            from . import showip
 
         elif modulo == "jogo2":
 
