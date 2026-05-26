@@ -1,111 +1,157 @@
-from machine import Pin
+# menu.py
+#
+# Raspberry Pi Pico + SSD1306
+# Navegação com:
+# - Joystick
+# - Botão A
+# - Botão B
+#
+# OLED:
+# SDA = GP14
+# SCL = GP15
+#
+# Joystick:
+# X = GP27
+# Y = GP26
+# BTN = GP22
+#
+# Botão A = GP5
+# Botão B = GP6
+
+from machine import Pin, I2C, ADC
 import ssd1306
 import time
-from .input *
 
-from .ipshow import ipshow
+# =========================================
+# OLED
+# =========================================
 
-# =========================
-# MENU ITEMS
-# =========================
+i2c = I2C(
+    1,
+    scl=Pin(15),
+    sda=Pin(14),
+    freq=400000
+)
+
+oled = ssd1306.SSD1306_I2C(
+    128,
+    64,
+    i2c
+)
+
+# =========================================
+# BOTÕES
+# =========================================
+
+btn_a = Pin(5, Pin.IN, Pin.PULL_UP)
+btn_b = Pin(6, Pin.IN, Pin.PULL_UP)
+joy_btn = Pin(22, Pin.IN, Pin.PULL_UP)
+
+# =========================================
+# JOYSTICK
+# =========================================
+
+joy_x = ADC(27)
+joy_y = ADC(26)
+
+# =========================================
+# MENU
+# =========================================
 
 menu_items = [
-    "Mostrar IP",
-    "System Info",
+    "IP Address",
     "WiFi Scan",
+    "System Info",
+    "Terminal",
     "Reboot",
+    "Shutdown"
 ]
 
 selected = 0
 
-# =========================
+# =========================================
+# CONFIG
+# =========================================
+
+JOY_UP = 15000
+JOY_DOWN = 50000
+
+last_move = 0
+move_delay = 200
+
+# =========================================
 # DRAW MENU
-# =========================
+# =========================================
 
 def draw_menu():
 
-    lines = []
+    oled.fill(0)
 
-    for i, item in enumerate(menu_items):
+    oled.text("MXQ Companion", 0, 0)
 
-        if i == selected:
-            lines.append("> " + item)
-        else:
-            lines.append("  " + item)
+    start = max(0, selected - 2)
 
-    draw(lines)
+    for i in range(4):
 
-# =========================
-# ACTIONS
-# =========================
+        idx = start + i
 
-def execute_selected():
+        if idx >= len(menu_items):
+            break
 
-    global selected
+        y = 16 + (i * 12)
 
-    if selected == 0:
-        ipshow()
+        prefix = "> " if idx == selected else "  "
 
-    elif selected == 1:
+        oled.text(prefix + menu_items[idx], 0, y)
 
-        draw([
-            "System Info",
-            "",
-            "TODO"
-        ])
+    oled.show()
 
-        wait_back()
+# =========================================
+# POPUP
+# =========================================
 
-    elif selected == 2:
+def popup(text):
 
-        draw([
-            "WiFi Scan",
-            "",
-            "TODO"
-        ])
+    oled.fill(0)
 
-        wait_back()
+    oled.text("Selected:", 0, 20)
+    oled.text(text[:16], 0, 36)
 
-    elif selected == 3:
+    oled.show()
 
-        draw([
-            "Reboot",
-            "",
-            "TODO"
-        ])
+# =========================================
+# BUTTON HELPERS
+# =========================================
 
-        wait_back()
+def pressed(pin):
 
-# =========================
-# WAIT BACK
-# =========================
+    if pin.value() == 0:
 
-def wait_back():
+        time.sleep_ms(180)
 
-    while True:
+        return True
 
-        if botao_b_pressionado():
-            return
+    return False
 
-        time.sleep_ms(50)
+# =========================================
+# MAIN LOOP
+# =========================================
 
-# =========================
-# MENU LOOP
-# =========================
+draw_menu()
 
-def run():
+while True:
 
-    global selected
+    now = time.ticks_ms()
 
-    draw_menu()
+    y_val = joy_y.read_u16()
 
-    while True:
+    # =====================================
+    # JOYSTICK UP
+    # =====================================
 
-        # =====================
-        # JOYSTICK UP
-        # =====================
+    if y_val < JOY_UP:
 
-        if joystick_cima():
+        if time.ticks_diff(now, last_move) > move_delay:
 
             selected -= 1
 
@@ -114,13 +160,15 @@ def run():
 
             draw_menu()
 
-            time.sleep_ms(200)
+            last_move = now
 
-        # =====================
-        # JOYSTICK DOWN
-        # =====================
+    # =====================================
+    # JOYSTICK DOWN
+    # =====================================
 
-        if joystick_baixo():
+    elif y_val > JOY_DOWN:
+
+        if time.ticks_diff(now, last_move) > move_delay:
 
             selected += 1
 
@@ -129,18 +177,28 @@ def run():
 
             draw_menu()
 
-            time.sleep_ms(200)
+            last_move = now
 
-        # =====================
-        # SELECT
-        # =====================
+    # =====================================
+    # SELECT
+    # =====================================
 
-        if botao_a_pressionado():
+    if pressed(btn_a) or pressed(joy_btn):
 
-            execute_selected()
+        item = menu_items[selected]
 
-            draw_menu()
+        popup(item)
 
-            time.sleep_ms(200)
+        print("SELECTED:", item)
 
-        time.sleep_ms(50)
+    # =====================================
+    # BACK / ACTION B
+    # =====================================
+
+    if pressed(btn_b):
+
+        popup("Button B")
+
+        print("BUTTON B")
+
+    time.sleep_ms(20)
