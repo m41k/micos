@@ -1,9 +1,8 @@
 from machine import Pin, I2C, UART
 import ssd1306
 import time
-import gc
 
-from system.router import open_app
+from system.router import goto
 
 from apps.current.input import (
     botao_b_pressionado
@@ -85,36 +84,6 @@ def draw(lines):
     oled.show()
 
 # =========================================================
-# RETURN MENU
-# =========================================================
-
-def voltar_menu():
-
-    try:
-
-        uart.deinit()
-
-    except:
-
-        pass
-
-    gc.collect()
-
-    oled.fill(0)
-
-    oled.text(
-        "Voltando...",
-        12,
-        28
-    )
-
-    oled.show()
-
-    time.sleep_ms(300)
-
-    open_app("menu")
-
-# =========================================================
 # MAIN
 # =========================================================
 
@@ -139,7 +108,15 @@ def main():
             and pode_input()
         ):
 
-            voltar_menu()
+            try:
+
+                uart.deinit()
+
+            except:
+
+                pass
+
+            goto("menu")
 
             return
 
