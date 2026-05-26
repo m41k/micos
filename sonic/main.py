@@ -3,7 +3,7 @@ import ssd1306
 import framebuf
 import time
 
-APP_PATH = "/apps/current/"
+
 
 # =========================
 # OLED
@@ -17,12 +17,10 @@ oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 buzzer = PWM(Pin(21))
 buzzer.freq(20000)
 
-
 # =========================
 # SOM WAV (SEU MÉTODO ORIGINAL)
 # =========================
 def play_wav(filename, rate=8000):
-
 
     with open(filename, "rb") as f:
         f.read(44)  # header WAV
@@ -30,27 +28,14 @@ def play_wav(filename, rate=8000):
 
     delay = 1_000_000 // rate
 
-
-
     for s in data:
-
-
 
         # 🔥 MANTIDO IGUAL AO SEU QUE FUNCIONA
         buzzer.duty_u16(s * 257)
 
         time.sleep_us(delay)
 
-
-
     buzzer.duty_u16(0)
-
-
-
-
-
-
-
 
 # =========================
 # IMAGEM BIN
@@ -59,7 +44,6 @@ def load_image(path):
 
     with open(path, "rb") as f:
         data = f.read()
-
 
     return framebuf.FrameBuffer(
         bytearray(data),
@@ -71,9 +55,9 @@ def load_image(path):
 # =========================
 # SEGA LOGO
 # =========================
-sega_fb = load_image(
-    APP_PATH + "sega.bin"
-)
+sega_fb = load_image("sega.bin")
+
+
 
 # =========================
 # BOOT
@@ -87,6 +71,16 @@ oled.show()
 time.sleep(0.3)
 
 # toca som (mesma lógica do seu botão)
-play_wav(
-    APP_PATH + "som.wav"
-)
+play_wav("som.wav")
+
+
+
+# tela final
+oled.fill(0)
+#oled.text("READY", 45, 30)
+oled.show()
+
+from . import title
+
+#while True:
+#    time.sleep(1)
