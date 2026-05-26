@@ -111,10 +111,12 @@ def ipshow():
 
             oled.show()
 
-            from . import menu
+            time.sleep_ms(200)
 
-            break
+            import apps.current.menu
 
+            return
+            
         # =====================================
         # UART
         # =====================================
