@@ -22,8 +22,8 @@ oled = ssd1306.SSD1306_I2C(
 uart = UART(
     0,
     baudrate=115200,
-    tx=Pin(16),
-    rx=Pin(17)
+    tx=Pin(0),
+    rx=Pin(1)
 )
 
 def draw(lines):
@@ -44,8 +44,6 @@ def ipshow():
         "Waiting..."
     ])
 
-    buffer = ""
-
     while True:
 
         # VOLTAR
@@ -56,22 +54,21 @@ def ipshow():
         # UART
         if uart.any():
 
-            data = uart.read()
+            data = uart.readline()
 
             if data:
 
-                buffer += data.decode()
+                try:
 
-                if "\n" in buffer:
-
-                    line = buffer.strip()
-
-                    buffer = ""
+                    line = data.decode().strip()
 
                     draw([
                         "ETH0 IP:",
                         "",
                         line
                     ])
+
+                except:
+                    pass
 
         time.sleep_ms(50)
