@@ -49,7 +49,7 @@ def ipshow():
         # VOLTAR
         if botao_a_pressionado():
 
-            return
+            from . import menu
 
         # UART
         if uart.any():
