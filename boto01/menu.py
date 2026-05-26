@@ -1,12 +1,7 @@
 from machine import Pin
-from ssd1306 import SSD1306_I2C
+import ssd1306
 import time
-from .input import (
-    botao_a_pressionado,
-    botao_b_pressionado,
-    joystick_cima,
-    joystick_baixo
-)
+from .input *
 
 from .ipshow import ipshow
 
