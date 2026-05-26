@@ -1,6 +1,9 @@
 from machine import Pin, I2C, UART
 import ssd1306
 import time
+import gc
+
+from system.router import open_app
 
 from .input import (
     botao_b_pressionado
@@ -87,17 +90,29 @@ def draw(lines):
 
 def voltar_menu():
 
+    try:
+
+        uart.deinit()
+
+    except:
+
+        pass
+
+    gc.collect()
+
     oled.fill(0)
+
+    oled.text(
+        "Voltando...",
+        12,
+        28
+    )
 
     oled.show()
 
-    time.sleep_ms(200)
+    time.sleep_ms(300)
 
-    exec(
-        open(
-            "/apps/current/menu.py"
-        ).read()
-    )
+    open_app("menu")
 
 # =========================================================
 # SCREEN
