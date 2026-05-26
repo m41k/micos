@@ -1,24 +1,4 @@
 from machine import Pin, I2C, PWM
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import ssd1306
 import framebuf
 import time
