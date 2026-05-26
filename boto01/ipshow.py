@@ -5,7 +5,7 @@ import gc
 
 from system.router import open_app
 
-from .input import (
+from apps.current.input import (
     botao_b_pressionado
 )
 
