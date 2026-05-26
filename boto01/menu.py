@@ -1,23 +1,3 @@
-# menu.py
-#
-# Raspberry Pi Pico + SSD1306
-# Navegação com:
-# - Joystick
-# - Botão A
-# - Botão B
-#
-# OLED:
-# SDA = GP14
-# SCL = GP15
-#
-# Joystick:
-# X = GP27
-# Y = GP26
-# BTN = GP22
-#
-# Botão A = GP5
-# Botão B = GP6
-
 from machine import Pin, I2C, ADC
 import ssd1306
 import time
@@ -187,18 +167,32 @@ while True:
 
         item = menu_items[selected]
 
-        popup(item)
+        # ================================
+        # IP ADDRESS
+        # ================================
 
-        print("SELECTED:", item)
+        if item == "IP Address":
+
+            from . import ipshow
+
+            draw_menu()
+
+        # ================================
+        # DEFAULT
+        # ================================
+
+        else:
+
+            popup(item)
+
+            print("SELECTED:", item)
 
     # =====================================
-    # BACK / ACTION B
+    # BUTTON B
     # =====================================
 
     if pressed(btn_b):
 
-        popup("Button B")
-
-        print("BUTTON B")
+        draw_menu()
 
     time.sleep_ms(20)
