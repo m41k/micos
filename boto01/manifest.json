@@ -4,6 +4,7 @@
   "files": [
     "__init__.py",
     "main.py",
+    "menu.py",
     "input.py",
     "ipshow.py"
   ]
