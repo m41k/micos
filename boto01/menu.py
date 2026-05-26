@@ -1,9 +1,8 @@
 from machine import Pin, I2C
 from ssd1306 import SSD1306_I2C
 import time
-import gc
 
-from system.router import open_app
+from system.router import goto
 
 from apps.current.input import (
     cima,
@@ -121,82 +120,80 @@ def desenha_menu():
     oled.show()
 
 # =========================================================
-# OPEN MODULE
+# MAIN
 # =========================================================
 
-def abrir_app(modulo):
+def main():
 
-    oled.fill(0)
+    global selecionado
 
-    oled.text(
-        "Abrindo...",
-        20,
-        28
-    )
+    desenha_menu()
 
-    oled.show()
+    while True:
 
-    time.sleep_ms(300)
+        # =====================================
+        # CIMA
+        # =====================================
 
-    gc.collect()
+        if cima() and pode_input():
 
-    open_app(modulo)
+            selecionado -= 1
+
+            if selecionado < 0:
+
+                selecionado = (
+                    len(menu_items) - 1
+                )
+
+            desenha_menu()
+
+        # =====================================
+        # BAIXO
+        # =====================================
+
+        elif baixo() and pode_input():
+
+            selecionado += 1
+
+            if selecionado >= len(menu_items):
+
+                selecionado = 0
+
+            desenha_menu()
+
+        # =====================================
+        # SELECT
+        # =====================================
+
+        elif (
+            botao_a_pressionado()
+            and pode_input()
+        ):
+
+            modulo = menu_items[
+                selecionado
+            ]["modulo"]
+
+            oled.fill(0)
+
+            oled.text(
+                "Abrindo...",
+                20,
+                28
+            )
+
+            oled.show()
+
+            time.sleep_ms(300)
+
+            goto(modulo)
+
+            return
+
+        time.sleep_ms(10)
 
 # =========================================================
 # START
 # =========================================================
 
-desenha_menu()
-
-# =========================================================
-# LOOP
-# =========================================================
-
-while True:
-
-    # =====================================
-    # CIMA
-    # =====================================
-
-    if cima() and pode_input():
-
-        selecionado -= 1
-
-        if selecionado < 0:
-
-            selecionado = len(menu_items) - 1
-
-        desenha_menu()
-
-    # =====================================
-    # BAIXO
-    # =====================================
-
-    elif baixo() and pode_input():
-
-        selecionado += 1
-
-        if selecionado >= len(menu_items):
-
-            selecionado = 0
-
-        desenha_menu()
-
-    # =====================================
-    # SELECT
-    # =====================================
-
-    elif (
-        botao_a_pressionado()
-        and pode_input()
-    ):
-
-        modulo = menu_items[
-            selecionado
-        ]["modulo"]
-
-        abrir_app(modulo)
-
-        break
-
-    time.sleep_ms(10)
+main()
