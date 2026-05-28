@@ -4,7 +4,8 @@
   "files": [
     "__init__.py",
     "main.py",
-    "animacoes.py",    
+    "animacoes.py",
+    "frame.py",    
     "sprites.py"
   ]
 }
