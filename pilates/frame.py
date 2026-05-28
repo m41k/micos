@@ -48,7 +48,7 @@ def mostrar(data, w, h):
 
 while True:
 
-    animacao = "estatico"
+    animacao = "hundred"
 
     # =====================================================
     # TOCAR ANIMAÇÃO
