@@ -58,4 +58,4 @@ while True:
 
         mostrar(data, w, h)
 
-        time.sleep_ms(350)
+        time.sleep_ms(250)
