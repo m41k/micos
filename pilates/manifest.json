@@ -1,0 +1,10 @@
+{
+  "name": "pilates",
+  "entry": "main.py",
+  "files": [
+    "__init__.py",
+    "main.py",
+    "animacoes.py",    
+    "sprites.py"
+  ]
+}
